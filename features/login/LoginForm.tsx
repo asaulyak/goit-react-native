@@ -9,18 +9,15 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native';
-import { ImagePicker } from '@/components/image-picker/ImagePicker';
 import { useState } from 'react';
 
-export const RegistrationFrom = () => {
-  const [name, setName] = useState<string | undefined>();
+export const LoginForm = () => {
   const [email, setEmail] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
-
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = () => {
-    console.log('Signup data', { name, email, password });
+    console.log('Login data', { email, password });
   };
 
   const toggleShowPassword = () => {
@@ -34,16 +31,9 @@ export const RegistrationFrom = () => {
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           style={styles.keyboardAvoidingView}
         >
-          <ImagePicker style={styles.imagePicker} />
-          <Text style={styles.title}>Sign Up</Text>
+          <Text style={styles.title}>Log In</Text>
           <View style={styles.form}>
             <View style={styles.formFields}>
-              <TextInput
-                placeholder="Name"
-                style={styles.input}
-                value={name}
-                onChangeText={value => setName(value)}
-              ></TextInput>
               <TextInput
                 placeholder="Email"
                 style={styles.input}
@@ -66,7 +56,7 @@ export const RegistrationFrom = () => {
             <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
               <Text style={styles.submitButtonText}>Sign Up</Text>
             </TouchableOpacity>
-            <Text style={styles.logInLink}>Already have an account? Log In</Text>
+            <Text style={styles.logInLink}>Don't have account yet? Sign Up</Text>
           </View>
         </KeyboardAvoidingView>
       </View>
@@ -83,7 +73,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     alignItems: 'center',
     paddingLeft: 16,
-    paddingRight: 16
+    paddingRight: 16,
+    paddingTop: 32
   },
   title: {
     fontWeight: 500,
@@ -145,13 +136,9 @@ const styles = StyleSheet.create({
     color: '#1B4371',
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 78
-  },
-  imagePicker: {
-    top: -60
+    marginBottom: 144
   },
   keyboardAvoidingView: {
-    width: '100%',
-    alignItems: 'center'
+    width: '100%'
   }
 });
