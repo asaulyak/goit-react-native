@@ -1,14 +1,12 @@
 import { ImageBackground, Keyboard, StyleSheet, TouchableWithoutFeedback, View, ViewProps } from 'react-native';
 
-export const AuthLayout = ({ children }: ViewProps) => {
+export const AuthLayout = ({ children, style }: ViewProps) => {
   return (
-    <View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ImageBackground source={require('@/assets/images/main_bg.jpeg')} style={styles.backgroundImage}>
-          <View style={styles.view}>{children}</View>
+          <View style={[styles.view, style]}>{children}</View>
         </ImageBackground>
       </TouchableWithoutFeedback>
-    </View>
   );
 };
 

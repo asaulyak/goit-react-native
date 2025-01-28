@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { ImagePicker } from '@/components/image-picker/ImagePicker';
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import {useAuth} from '@/common/auth/auth.context';
 
 export const RegistrationFrom = () => {
   const [name, setName] = useState<string | undefined>();
@@ -19,8 +21,16 @@ export const RegistrationFrom = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const { signUp } = useAuth();
+
+  const navigation = useNavigation();
+
+  const navigateToLogin = () => navigation.navigate('Login');
+
+  const handleLoginPress = () => navigateToLogin();
+
   const handleSubmit = () => {
-    console.log('Signup data', { name, email, password });
+    signUp();
   };
 
   const toggleShowPassword = () => {
@@ -66,7 +76,9 @@ export const RegistrationFrom = () => {
             <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
               <Text style={styles.submitButtonText}>Sign Up</Text>
             </TouchableOpacity>
-            <Text style={styles.logInLink}>Already have an account? Log In</Text>
+            <Text onPress={handleLoginPress} style={styles.logInLink}>
+              Already have an account? Log In
+            </Text>
           </View>
         </KeyboardAvoidingView>
       </View>

@@ -1,7 +1,10 @@
-import { RegistrationScreen } from '@/screens/RegistrationScreen';
-import {LoginScreen} from '@/screens/LoginScreen';
+import 'react-native-gesture-handler';
+import { AuthNavigator } from '@/navigators/auth.navigator';
+import { PrivateNavigator } from '@/navigators/private.navigator';
+import { useAuth } from '@/common/auth/auth.context';
 
 export default function Index() {
-  // return <RegistrationScreen />;
-  return <LoginScreen />;
+  const { isLoggedIn } = useAuth();
+
+  return <>{isLoggedIn ? <PrivateNavigator /> : <AuthNavigator />}</>;
 }

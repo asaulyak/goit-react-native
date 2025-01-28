@@ -10,14 +10,25 @@ import {
   View
 } from 'react-native';
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '@/common/auth/auth.context';
 
 export const LoginForm = () => {
   const [email, setEmail] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
   const [showPassword, setShowPassword] = useState(false);
+  const { signIn, isLoggedIn } = useAuth();
+
+  console.log(isLoggedIn);
+
+  const navigation = useNavigation();
+
+  const navigateToSignup = () => navigation.navigate('Signup');
+
+  const handleSignupPress = () => navigateToSignup();
 
   const handleSubmit = () => {
-    console.log('Login data', { email, password });
+    signIn();
   };
 
   const toggleShowPassword = () => {
@@ -54,9 +65,11 @@ export const LoginForm = () => {
               </View>
             </View>
             <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-              <Text style={styles.submitButtonText}>Sign Up</Text>
+              <Text style={styles.submitButtonText}>Log In</Text>
             </TouchableOpacity>
-            <Text style={styles.logInLink}>Don't have account yet? Sign Up</Text>
+            <Text onPress={handleSignupPress} style={styles.logInLink}>
+              Don't have account yet? Sign Up
+            </Text>
           </View>
         </KeyboardAvoidingView>
       </View>
