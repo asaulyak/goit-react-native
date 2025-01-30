@@ -1,8 +1,8 @@
-import { ImageUploader } from '@/components/image-uploader/ImageUploader';
 import { Feather, SimpleLineIcons } from '@expo/vector-icons';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { LiveCamera } from '@/components/live-camera/LiveCamera';
 
 export const CreatePost = () => {
   const [name, setName] = useState<string | undefined>();
@@ -21,7 +21,8 @@ export const CreatePost = () => {
   return (
     <View style={styles.view}>
       <View style={styles.content}>
-        <ImageUploader />
+        <LiveCamera onTakePhoto={uri => setName(uri)} />
+
         <View style={styles.form}>
           <View style={styles.input}>
             <TextInput
@@ -70,11 +71,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     paddingHorizontal: 16,
-    paddingVertical: 32,
+    paddingVertical: 32
   },
   content: {
     gap: 32,
-    flex: 1,
+    flex: 1
   },
   form: {
     gap: 16
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     color: '#BDBDBD'
   },
   bottomBar: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   navButton: {
     borderRadius: 20,
