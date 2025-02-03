@@ -2,16 +2,30 @@ import { ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-nati
 import { Posts } from '@/features/posts/Posts';
 import { useAuth } from '@/common/auth/auth.context';
 import { Feather } from '@expo/vector-icons';
-import { ImagePicker } from '@/components/image-picker/ImagePicker';
+import { ImageUploader } from '@/components/image-picker/ImageUploader';
+import {collection, doc, getDoc, getDocs, setDoc} from 'firebase/firestore';
+import { db } from '@/config';
+import { useEffect, useState } from 'react';
+import {fetchAuthorPosts} from '@/features/posts/posts.service';
 
 export const Profile = () => {
   const { signOut, user } = useAuth();
   const handleLogOut = () => signOut();
 
+  const handleImageUpload = async (avatar: string) => {
+    await setDoc(doc(db, 'users', user.id), { avatar }, { merge: true });
+  };
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetchAuthorPosts(user.id).then(data => setPosts(data));
+  }, []);
+
   return (
     <View style={styles.view}>
       <View style={styles.content}>
-        <ImagePicker style={styles.imagePicker} imageUrl={user?.avatar} />
+        <ImageUploader style={styles.imagePicker} imageUrl={user?.avatar} onUpload={handleImageUpload} />
 
         <View style={styles.topBar}>
           <TouchableOpacity onPress={handleLogOut}>
@@ -22,7 +36,7 @@ export const Profile = () => {
         <Text style={styles.userName}>{user?.name}</Text>
 
         <ScrollView style={styles.scrollContainer}>
-          <Posts />
+          <Posts posts={posts} />
         </ScrollView>
       </View>
     </View>
@@ -51,12 +65,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end'
   },
   scrollContainer: {
-    width: '100%',
+    width: '100%'
   },
   imagePicker: {
     top: -84,
-    marginBottom: -52,
-    backgroundColor: 'red'
+    marginBottom: -52
   },
   userName: {
     fontSize: 30,

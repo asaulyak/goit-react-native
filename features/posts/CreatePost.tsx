@@ -6,7 +6,11 @@ import { LiveCamera } from '@/components/live-camera/LiveCamera';
 import { PermissionStatus, requestForegroundPermissionsAsync } from 'expo-location';
 import { GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import 'react-native-get-random-values';
-import { PostLocation } from '@/features/posts/types';
+import { PostLocation, TPost } from '@/features/posts/types';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/config';
+import { nanoid } from 'nanoid/non-secure';
+import { useAuth } from '@/common/auth/auth.context';
 
 const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY;
 
@@ -14,6 +18,8 @@ export const CreatePost = () => {
   const [name, setName] = useState<string | undefined>();
   const [locationData, setLocationData] = useState<PostLocation | undefined>();
   const [image, setImage] = useState<string | undefined>();
+
+  const { user } = useAuth();
 
   const placesRef = useRef<GooglePlacesAutocompleteRef | null>(null);
 
@@ -31,8 +37,21 @@ export const CreatePost = () => {
 
   const navigation = useNavigation();
 
-  const handleSubmit = () => {
-    navigation.navigate('Posts');
+  const handleSubmit = async () => {
+    const id = nanoid();
+    const postData: TPost = { author: user, title: name, location: locationData, image, likesNumber: 0, comments: [] };
+
+    console.log(
+      'postData',
+      postData);
+    try {
+      const postResult = await setDoc(doc(db, 'posts', id), postData, { merge: true });
+      console.log('postResult', postResult);
+      navigation.navigate('Posts');
+    } catch (error) {
+      console.log('error', error);
+    }
+
   };
 
   const handleImageChange = (uri: string) => {
@@ -70,7 +89,7 @@ export const CreatePost = () => {
             onPress={(_, details = null) => {
               if (details) {
                 setLocationData({
-                  address: details.formattedAddress,
+                  address: details.formatted_address,
                   geo: {
                     lat: details.geometry.location.lat,
                     lng: details.geometry.location.lng

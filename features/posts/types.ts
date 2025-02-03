@@ -24,12 +24,15 @@ export interface TPost {
   likesNumber: number;
   location: PostLocation;
   author: User;
-  deviceLocation?: LocationObject;
 }
 
 export interface PostProps {
   post: TPost;
   showLikes?: boolean;
+}
+
+export interface PostsProps extends ViewProps {
+  posts: TPost[];
 }
 
 export interface User {

@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import { Post } from '@/features/posts/Post';
-import { posts } from '@/features/posts/posts.data';
+import { PostsProps } from '@/features/posts/types';
 
-export const Posts = () => {
+export const Posts = ({ posts }: PostsProps) => {
   return (
     <View style={styles.view}>
       {posts.map(post => (

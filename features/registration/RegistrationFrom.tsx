@@ -9,19 +9,21 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native';
-import { ImagePicker } from '@/components/image-picker/ImagePicker';
-import { useState } from 'react';
+import { ImageUploader } from '@/components/image-picker/ImageUploader';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import {useAuth} from '@/common/auth/auth.context';
+import { useAuth } from '@/common/auth/auth.context';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/config';
 
 export const RegistrationFrom = () => {
   const [name, setName] = useState<string | undefined>();
   const [email, setEmail] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
+  const [avatar, setAvatar] = useState<string | undefined>();
+  const { signUp } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const { signUp } = useAuth();
 
   const navigation = useNavigation();
 
@@ -29,13 +31,24 @@ export const RegistrationFrom = () => {
 
   const handleLoginPress = () => navigateToLogin();
 
-  const handleSubmit = () => {
-    signUp();
+  const handleSubmit = async () => {
+    if (!name || !email || !password) {
+      return;
+    }
+
+    await signUp({
+      email,
+      name,
+      password,
+      avatar
+    });
   };
 
   const toggleShowPassword = () => {
     setShowPassword(prev => !prev);
   };
+
+  const handleImageChange = (uri: string) => setAvatar(uri);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -44,7 +57,7 @@ export const RegistrationFrom = () => {
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           style={styles.keyboardAvoidingView}
         >
-          <ImagePicker style={styles.imagePicker} />
+          <ImageUploader style={styles.imagePicker} onUpload={handleImageChange} />
           <Text style={styles.title}>Sign Up</Text>
           <View style={styles.form}>
             <View style={styles.formFields}>

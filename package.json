@@ -16,9 +16,13 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@firebase/app": "^0.10.18",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/stack": "^7.1.1",
+    "@reduxjs/toolkit": "^2.5.1",
+    "@tanstack/react-query": "^5.66.0",
     "expo": "~52.0.27",
     "expo-blur": "~14.0.2",
     "expo-camera": "~16.0.14",
@@ -35,6 +39,7 @@
     "expo-symbols": "~0.2.1",
     "expo-system-ui": "~4.0.7",
     "expo-web-browser": "~14.0.2",
+    "firebase": "^11.2.0",
     "nanoid": "^5.0.9",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -49,10 +54,13 @@
     "react-native-svg": "15.8.0",
     "react-native-svg-transformer": "^1.5.0",
     "react-native-web": "~0.19.13",
-    "react-native-webview": "13.12.5"
+    "react-native-webview": "13.12.5",
+    "react-redux": "^9.2.0",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@firebase/app-types": "^0.9.3",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",
     "@types/react-test-renderer": "^18.3.0",

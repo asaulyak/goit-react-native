@@ -19,8 +19,6 @@ export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { signIn, isLoggedIn } = useAuth();
 
-  console.log(isLoggedIn);
-
   const navigation = useNavigation();
 
   const navigateToSignup = () => navigation.navigate('Signup');
@@ -28,7 +26,14 @@ export const LoginForm = () => {
   const handleSignupPress = () => navigateToSignup();
 
   const handleSubmit = () => {
-    signIn();
+    if (!email || !password) {
+      return;
+    }
+
+    return signIn({
+      email,
+      password
+    });
   };
 
   const toggleShowPassword = () => {

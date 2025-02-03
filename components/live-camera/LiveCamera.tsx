@@ -60,10 +60,7 @@ export const LiveCamera = ({ onTakePhoto }: LiveCameraProps) => {
       mediaTypes: ['images']
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      console.log(result.assets[0].uri);
       updatePhoto(result.assets[0].uri);
     }
   };
