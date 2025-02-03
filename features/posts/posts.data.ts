@@ -13,7 +13,13 @@ export const posts: TPost[] = [
     id: nanoid(),
     author: user,
     title: 'Forest',
-    location: 'Odesa, Ukraine',
+    location: {
+      address: 'Odesa, Ukraine',
+      geo: {
+        lat: 46.470211,
+        lng: 30.730639
+      }
+    },
     image: 'https://www.sciencefriday.com/wp-content/uploads/2021/12/Forest-trees.jpg?resize=400,243',
     comments: [
       {
@@ -40,7 +46,13 @@ export const posts: TPost[] = [
     id: nanoid(),
     author: user,
     title: 'Sea',
-    location: 'Kyiv, Ukraine',
+    location: {
+      address: 'Odesa, Ukraine',
+      geo: {
+        lat: 46.470211,
+        lng: 30.730639
+      }
+    },
     image: 'https://siwi.org/wp-content/uploads/2023/06/s2s_world-oceans-day_qa.jpg.webp',
     comments: [
       {
@@ -56,7 +68,13 @@ export const posts: TPost[] = [
     id: nanoid(),
     author: user,
     title: 'Desert',
-    location: 'Mexico, Mexico',
+    location: {
+      address: 'Odesa, Ukraine',
+      geo: {
+        lat: 46.470211,
+        lng: 30.730639
+      }
+    },
     image: 'https://i.natgeofe.com/n/ea531fad-a6e1-41e1-b3fb-fab828243865/309.jpg?w=1280&h=961',
     comments: [
       {

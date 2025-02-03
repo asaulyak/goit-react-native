@@ -1,16 +1,33 @@
 import { Feather, SimpleLineIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { LiveCamera } from '@/components/live-camera/LiveCamera';
+import { PermissionStatus, requestForegroundPermissionsAsync } from 'expo-location';
+import { GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
+import 'react-native-get-random-values';
+import { PostLocation } from '@/features/posts/types';
+
+const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY;
 
 export const CreatePost = () => {
   const [name, setName] = useState<string | undefined>();
-  const [location, setLocation] = useState<string | undefined>();
+  const [locationData, setLocationData] = useState<PostLocation | undefined>();
+  const [image, setImage] = useState<string | undefined>();
 
-  const isFormReady = useMemo(() => {
-    return name && location;
-  }, [name, location]);
+  const placesRef = useRef<GooglePlacesAutocompleteRef | null>(null);
+
+  const isFormValid = useMemo(() => !!name && !!locationData && !!image, [name, locationData, image]);
+  const canReset = useMemo(() => !!name || !!locationData || !!image, [name, locationData, image]);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await requestForegroundPermissionsAsync();
+      if (status !== PermissionStatus.GRANTED) {
+        return;
+      }
+    })();
+  }, []);
 
   const navigation = useNavigation();
 
@@ -18,10 +35,21 @@ export const CreatePost = () => {
     navigation.navigate('Posts');
   };
 
+  const handleImageChange = (uri: string) => {
+    setImage(uri);
+  };
+
+  const reset = () => {
+    setName(undefined);
+    setLocationData(undefined);
+    setImage(undefined);
+    placesRef.current?.clear();
+  };
+
   return (
     <View style={styles.view}>
       <View style={styles.content}>
-        <LiveCamera onTakePhoto={uri => setName(uri)} />
+        <LiveCamera onTakePhoto={handleImageChange} />
 
         <View style={styles.form}>
           <View style={styles.input}>
@@ -33,32 +61,57 @@ export const CreatePost = () => {
             />
           </View>
 
-          <View style={styles.input}>
-            <SimpleLineIcons style={styles.locationIcon} name="location-pin" size={18} color="#BDBDBD" />
-            <TextInput
-              style={styles.locationInput}
-              placeholderTextColor="#BDBDBD"
-              placeholder="Location..."
-              value={location}
-              onChangeText={value => setLocation(value)}
-            />
-          </View>
+          <GooglePlacesAutocomplete
+            ref={placesRef}
+            placeholder="Location..."
+            minLength={4}
+            enablePoweredByContainer={false}
+            fetchDetails
+            onPress={(_, details = null) => {
+              if (details) {
+                setLocationData({
+                  address: details.formattedAddress,
+                  geo: {
+                    lat: details.geometry.location.lat,
+                    lng: details.geometry.location.lng
+                  }
+                });
+              }
+            }}
+            query={{
+              key: GOOGLE_PLACES_API_KEY,
+              language: 'en'
+            }}
+            textInputProps={{
+              InputComp: TextInput,
+              style: styles.inputPlaces,
+              leftIcon: <SimpleLineIcons style={styles.locationIcon} name="location-pin" size={18} color="#BDBDBD" />
+            }}
+          />
         </View>
 
         <TouchableOpacity
-          style={[styles.submitButton, isFormReady ? undefined : styles.submitButtonDisabled]}
+          style={[styles.submitButton, isFormValid ? undefined : styles.submitButtonDisabled]}
           onPress={handleSubmit}
-          disabled={!isFormReady}
+          disabled={!isFormValid}
         >
-          <Text style={[styles.submitButtonText, isFormReady ? undefined : styles.submitButtonTextDisabled]}>
+          <Text style={[styles.submitButtonText, isFormValid ? undefined : styles.submitButtonTextDisabled]}>
             Submit
           </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={[styles.navButton, styles.navButtonDisabled]}>
-          <Feather name="trash-2" size={18} style={[styles.trashIcon, styles.trashIconDisabled]} />
+        <TouchableOpacity
+          style={[styles.navButton, canReset ? undefined : styles.navButtonDisabled]}
+          onPress={reset}
+          disabled={!canReset}
+        >
+          <Feather
+            name="trash-2"
+            size={18}
+            style={[styles.trashIcon, canReset ? undefined : styles.trashIconDisabled]}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -78,7 +131,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   form: {
-    gap: 16
+    gap: 16,
+    flex: 1
   },
   input: {
     height: 50,
@@ -86,7 +140,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E8E8E8',
     color: '#BDBDBD',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    overflow: 'visible'
+  },
+  inputPlaces: {
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8E8E8',
+    color: '#212121',
+    justifyContent: 'center',
+    overflow: 'visible'
   },
   locationInput: {
     paddingLeft: 28
@@ -120,9 +183,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 40,
     alignItems: 'center',
-    justifyContent: 'center'
-  },
-  navButtonActive: {
+    justifyContent: 'center',
     backgroundColor: '#FF6C00'
   },
   navButtonDisabled: {

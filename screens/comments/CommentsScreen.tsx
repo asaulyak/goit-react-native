@@ -1,10 +1,17 @@
 import { PrivateLayout } from '@/layouts/private.layout';
 import { PostWithComments } from '@/features/posts/PostWithComments';
-import { posts } from '@/features/posts/posts.data';
 import { StyleSheet } from 'react-native';
+import { TPost } from '@/features/posts/types';
+import { StackScreenProps } from '@react-navigation/stack';
 
-export const CommentsScreen = () => {
-  const [post] = posts;
+type CommentsParamsList = {
+  post: TPost;
+};
+
+type CommentsScreenProps = StackScreenProps<CommentsParamsList>;
+
+export const CommentsScreen = ({ route }: CommentsScreenProps) => {
+  const {post} = route.params;
 
   return (
     <PrivateLayout>

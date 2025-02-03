@@ -1,24 +1,19 @@
-import {PrivateLayout} from '@/layouts/private.layout';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {HomeBottomNavBar} from '@/screens/home/HomeBottomNavBar';
-import {AntDesign, Feather, FontAwesome5} from '@expo/vector-icons';
-import {CreatePostScreen} from '@/screens/posts/CreatePostScreen';
-import {useNavigation} from '@react-navigation/native';
-import {useAuth} from '@/common/auth/auth.context';
-import {ProfileScreen} from '@/screens/profile/ProfileScreen';
-import {PostsScreen} from '@/screens/posts/PostsScreen';
+import { PrivateLayout } from '@/layouts/private.layout';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { HomeBottomNavBar } from '@/screens/home/HomeBottomNavBar';
+import { AntDesign, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { CreatePostScreen } from '@/screens/posts/CreatePostScreen';
+import { useNavigation } from '@react-navigation/native';
+import { ProfileScreen } from '@/screens/profile/ProfileScreen';
+import { PostsScreen } from '@/screens/posts/PostsScreen';
 
 export const HomeScreen = () => {
   const Tabs = createBottomTabNavigator();
 
-  const { signOut } = useAuth();
-
   const navigation = useNavigation();
 
   const handleBack = () => navigation.goBack();
-
-  const handleLogOut = () => signOut();
 
   return (
     <PrivateLayout>
@@ -33,6 +28,7 @@ export const HomeScreen = () => {
           name="Posts"
           component={PostsScreen}
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
               const color = getActiveButtonColor(focused);
 
@@ -44,13 +40,7 @@ export const HomeScreen = () => {
                   <FontAwesome5 name="square" size={7} color={color} style={styles.postsIconPart} />
                 </View>
               );
-            },
-            headerRightContainerStyle: { paddingRight: 16 },
-            headerRight: () => (
-              <TouchableOpacity onPress={handleLogOut}>
-                <Feather name="log-out" size={24} color="#BDBDBD" />
-              </TouchableOpacity>
-            )
+            }
           }}
         />
         <Tabs.Screen

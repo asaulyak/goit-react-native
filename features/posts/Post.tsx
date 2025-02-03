@@ -1,27 +1,50 @@
-import { View, Image, Text, StyleSheet } from 'react-native';
-import { PostProps } from '@/features/posts/types';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { PostProps, TPost } from '@/features/posts/types';
 import { AntDesign, EvilIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export const Post = ({ post }: PostProps) => {
+  const navigation = useNavigation();
+
+  const handleCommentPress = () =>
+    navigation.navigate('Comments', {
+      post
+    });
+
+  const handleLocationPress = () => {
+    const {
+      location: { address, geo },
+      title
+    } = post;
+
+    navigation.navigate('Map', {
+      location: {
+        ...geo,
+        address,
+        title
+      }
+    });
+  };
+
   return (
     <View style={styles.view}>
       <Image source={{ uri: post.image }} style={styles.image}></Image>
       <Text style={styles.title}>{post.title}</Text>
       <View style={styles.info}>
         <View style={styles.social}>
-          <View style={styles.comments}>
+          <TouchableOpacity style={styles.comments} onPress={handleCommentPress}>
             <EvilIcons name="comment" size={18} color="#BDBDBD" />
             <Text style={styles.commentsTitle}>{post.comments.length}</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.likes}>
             <AntDesign name="like2" size={18} color="#BDBDBD" />
             <Text style={styles.commentsTitle}>{post.likesNumber}</Text>
           </View>
         </View>
-        <View style={styles.location}>
+        <TouchableOpacity style={styles.location} onPress={handleLocationPress}>
           <EvilIcons name="location" size={18} color="#BDBDBD" />
-          <Text style={styles.locationTitle}>{post.location}</Text>
-        </View>
+          <Text style={styles.locationTitle}>{post.location.address}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -1,4 +1,5 @@
 import { ViewProps } from 'react-native';
+import { LocationObject } from 'expo-location';
 
 export interface TComment {
   id: string;
@@ -7,14 +8,23 @@ export interface TComment {
   date: string;
 }
 
+export interface PostLocation {
+  address: string;
+  geo: {
+    lat: number;
+    lng: number;
+  };
+}
+
 export interface TPost {
   id: string;
   title: string;
   image: string;
   comments: TComment[];
   likesNumber: number;
-  location: string;
+  location: PostLocation;
   author: User;
+  deviceLocation?: LocationObject;
 }
 
 export interface PostProps {
