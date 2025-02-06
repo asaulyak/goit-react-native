@@ -8,6 +8,11 @@ module.exports = {
     scheme: 'myapp',
     userInterfaceStyle: 'automatic',
     newArchEnabled: true,
+    extra: {
+      eas: {
+        projectId: '7aefc706-bd2d-4c2e-80ab-90efc4345b10'
+      }
+    },
     ios: {
       supportsTablet: true
     },
@@ -21,7 +26,9 @@ module.exports = {
         googleMaps: {
           apiKey: process.env.GOOGLE_MAPS_API_KEY
         }
-      }
+      },
+      package: 'com.asaulyak.goit',
+      versionCode: 1
     },
     web: {
       bundler: 'metro',
